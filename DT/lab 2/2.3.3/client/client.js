@@ -1,14 +1,14 @@
-var socket = io.connect('localhost:8000'); //in loc de localhost se trece adresa de IP a calculatorului pe care este pornit serverul
+var socket = io.connect('localhost:8000');
 
 try {
-
     socket.on('connect', function (data) {
         socket.emit("message-from-client", "Hello to everyone from " + checkBrowser());
-		console.log("client started");
+        console.log("client started");
     });
 
     socket.on('message-from-server', function (message) {
         console.log("received message: "+message);
+        appendMessageToChat("received message: " + message);
     });
 
 }
@@ -31,5 +31,14 @@ document.getElementById("send").addEventListener("click", sendMessage);
 function sendMessage() {
     var message = document.getElementById("message").value;
     socket.emit("message-from-client", message);
-	console.log("sent message: "+message);
+    console.log("sent message: "+message);
+    appendMessageToChat("sent message: " + message);
+    document.getElementById("message").value = '';
+}
+
+function appendMessageToChat(message) {
+    var chatWindow = document.getElementById("chat-window");
+    var messageDiv = document.createElement("div");
+    messageDiv.innerHTML = message;
+    chatWindow.appendChild(messageDiv);
 }
